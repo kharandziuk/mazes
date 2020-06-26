@@ -62,30 +62,33 @@ end
 
 
 def maze(field)
-  field.each_with_index do |row, index|
-    row.each do |cell|
-      if index % 2 == 0
-        if cell == 1
-          print "*--"
+  field.each_with_index do |row, rindex|
+    row.each_with_index do |cell, cindex|
+      if rindex % 2 == 1
+        if cindex % 2 == 1
+          print '  '
         else
-          print "*  "
+          print '|'
         end
       else
-        if cell == 1
-          print "|  "
+        if cindex % 2 == 1
+          print '--'
         else
-          print "   "
+          print '*'
         end
       end
     end
-    if index % 2 == 0
-      puts '*'
-    else
-      puts '|'
-    end
+    puts
   end
 end
 
 if __FILE__ == $0
+  field = [
+    [0, 1, 0, 1, 0],
+    [1, 0, 1, 0, 1],
+    [0, 1, 0, 1, 0],
+    [1, 0, 1, 0, 1],
+    [0, 1, 0, 1, 0],
+  ]
   maze(field)
 end
