@@ -1,64 +1,30 @@
-field = [
-  [1,1,1,1],
-  [1,1,1,1],
-  [1,1,1,1],
-  [1,1,1,1],
-  [1,1,1,1],
-  [1,1,1,1],
-  [1,1,1,1],
-  [1,1,1,1],
-  [1,1,1,1],
-]
-
-def generate_field(size)
-  result = []
-  for j in 0...size
-    if j == size
-      result.push([1,0] * size)
-      next
-    end
-    row = []
-    for i in 0...size
-      #[isLeft, isRight]
-      if i == size
-        tree = [0, 1]
-      else
-        index = rand(0..1)
-        tree = [0, 0]
-        tree[index] = 1
-      end
-      row.push(tree)
-    end
-    result.push row
+def full_field(size)
+  field = []
+  for _ in 0...size
+    field.push [1] * size
   end
-  result
+  field[1][0] = 0
+  field
 end
 
-def field_from_trees(trees)
-  size = trees.length * 2 + 1
-  field = []
-  for i in 0...size
-    field.push [0] * size
-  end
-  for i in 0...size
-    if i % 2 == 0
-      next
-    end
-    field[0][i] = 1
-    field[size - 1][i] = 1
-    field[i][0] = 1
-    field[i][size - 1] = 1
-  end
-  for i in 0...trees.length
-    for j in 0..trees.length
-      down, right = trees[i][j]
-      field[i * 2 + 1][j * 2] == 1 if down == 1
-      field[i * 2 ][j * 2 + 1] == 1 if right == 1
+def binary_maze(field, step_fc = nil)
+  cells = (1...field.length).select {|el| el % 2 == 1}
+  for i in cells
+    for j in cells
+      if i == cells[-1]
+        field[i][j+1] = 0
+      elsif j == cells[-1]
+        field[i+1][j] = 0
+      elsif rand(0..1) == 1
+        field[i+1][j] = 0
+      else
+        field[i][j+1] = 0
+      end
+      step_fc.call(field)
     end
   end
   field
 end
-
 
 
 def maze(field)
@@ -68,11 +34,19 @@ def maze(field)
         if cindex % 2 == 1
           print '  '
         else
-          print '|'
+          if cell == 1
+            print '|'
+          else
+            print ' '
+          end
         end
       else
         if cindex % 2 == 1
-          print '--'
+          if cell == 1
+            print '--'
+          else
+            print '  '
+          end
         else
           print '*'
         end
@@ -82,13 +56,14 @@ def maze(field)
   end
 end
 
-if __FILE__ == $0
-  field = [
-    [0, 1, 0, 1, 0],
-    [1, 0, 1, 0, 1],
-    [0, 1, 0, 1, 0],
-    [1, 0, 1, 0, 1],
-    [0, 1, 0, 1, 0],
-  ]
+print_with_delay = Proc.new do |field|
+  system "clear"
   maze(field)
+  sleep 0.1
+end
+
+if __FILE__ == $0
+  field = full_field(31)
+
+  maze(binary_maze(field, print_with_delay))
 end

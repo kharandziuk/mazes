@@ -15,12 +15,14 @@ GEM
       diff-lcs (>= 1.2.0, < 2.0)
       rspec-support (~> 3.9.0)
     rspec-support (3.9.3)
+    solid_assert (1.0.0)
 
 PLATFORMS
   ruby
 
 DEPENDENCIES
   rspec
+  solid_assert
 
 BUNDLED WITH
    2.1.4
